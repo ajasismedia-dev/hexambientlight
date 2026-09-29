@@ -24,7 +24,7 @@
         
         <Border Style="{DynamicResource CardStyle}">
             <StackPanel>
-                <CheckBox Content="Close to Tray" IsChecked="{Binding CloseToTray}" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                <CheckBox Content="Close to Tray (Coming Soon)" IsEnabled="False" IsChecked="{Binding CloseToTray}" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
                 <CheckBox Content="Start with Windows (Coming Soon)" IsChecked="{Binding StartWithWindows}" Foreground="{DynamicResource TextPrimaryBrush}" IsEnabled="False" Margin="0,0,0,20"/>
                 
                 <Button Content="Save Settings" Command="{Binding SaveSettingsCommand}" Width="120" HorizontalAlignment="Left"/>

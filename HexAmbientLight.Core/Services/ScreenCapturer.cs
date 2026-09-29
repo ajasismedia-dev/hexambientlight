@@ -228,15 +228,16 @@ public class ScreenCapturer : IDisposable
         }
     }
 
-        public byte[] GetLatestFrameData()
+            public bool TryGetLatestFrameData(byte[] buffer)
     {
-        // TODO: GetLatestFrameData() her call'da full frame copy yapiyor.
-        // Bu sonraki performans turunda optimize edilecek.
         lock (_frameLock)
         {
-            var copy = new byte[_latestRgbaData.Length];
-            Array.Copy(_latestRgbaData, copy, _latestRgbaData.Length);
-            return copy;
+            if (_latestRgbaData.Length == 0 || buffer.Length != _latestRgbaData.Length)
+            {
+                return false;
+            }
+            Buffer.BlockCopy(_latestRgbaData, 0, buffer, 0, _latestRgbaData.Length);
+            return true;
         }
     }
 

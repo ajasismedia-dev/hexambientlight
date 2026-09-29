@@ -29,17 +29,21 @@
             </StackPanel>
         </Border>
 
-        <Border Style="{DynamicResource CardStyle}">
+                <Border Style="{DynamicResource CardStyle}">
             <StackPanel>
                 <TextBlock Text="Settings" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,10"/>
                 
-                <TextBlock Text="Target FPS (15 / 30 / 45 / 60)" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,10,0,5"/>
-                
+                <TextBlock Text="{Binding TargetFps, StringFormat='Target FPS: {0}'}" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,10,0,5"/>
                 <Slider Minimum="15" Maximum="60" TickFrequency="15" IsSnapToTickEnabled="True" Width="300" HorizontalAlignment="Left" Value="{Binding TargetFps}"/>
                 
-                <TextBlock Text="Brightness Cap" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,10,0,5"/>
-                
-                <Slider Minimum="0" Maximum="255" Value="255" Width="300" HorizontalAlignment="Left" IsEnabled="False"/>
+                <TextBlock Text="{Binding Brightness, StringFormat='Brightness Limit: {0}'}" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,15,0,5"/>
+                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Width="300" HorizontalAlignment="Left" Value="{Binding Brightness}"/>
+
+                <TextBlock Text="{Binding Saturation, StringFormat='Saturation: {0:F1}'}" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,15,0,5"/>
+                <Slider Minimum="0.0" Maximum="2.0" TickFrequency="0.1" IsSnapToTickEnabled="True" Width="300" HorizontalAlignment="Left" Value="{Binding Saturation}"/>
+
+                <TextBlock Text="{Binding SmoothingPercent, StringFormat='Smoothing: {0}%'}" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,15,0,5"/>
+                <Slider Minimum="0" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True" Width="300" HorizontalAlignment="Left" Value="{Binding SmoothingPercent}"/>
             </StackPanel>
         </Border>
     </StackPanel>

@@ -55,7 +55,7 @@
                 <StackPanel>
                     <Border Height="4" CornerRadius="2" Background="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,10"/>
                     <TextBlock Text="Ammo (Top Zone)" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
-                    <TextBlock Text="Active" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}"/>
+                    <TextBlock Text="{Binding AmmoDisplay}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}"/>
                 </StackPanel>
             </Border>
         </UniformGrid>

@@ -83,10 +83,6 @@ public class Cs2GsiListener : IDisposable
                 var json = await reader.ReadToEndAsync();
                 
                 // Debug log phase_countdowns specifically
-                if (json.Contains("phase_countdowns"))
-                {
-                    
-                }
 
                 var state = JsonSerializer.Deserialize<Cs2GameState>(json);
 

@@ -1,19 +1,20 @@
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using HexAmbientLight.Core.Models;
 using HexAmbientLight.Core.Services;
 using Xunit;
 
 namespace HexAmbientLight.Tests;
 
-using System;
-using System.IO;
-
 public class GameEffectEngineTests : IDisposable
 {
+    private readonly string _testDir = Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString());
+
     [Fact]
     public async System.Threading.Tasks.Task Render_BombPlanted_StartsGreen_ThenRed()
     {
-        var settings = new SettingsManager(Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString()));
+        var settings = new SettingsManager(_testDir);
         await settings.InitializeAsync();
         settings.LayoutConfig = new LedLayoutConfig { LeftCount = 10, TopCount = 20, RightCount = 10, TotalLeds = 40 };
         settings.AppSettings.BombTimerSeconds = 40;
@@ -36,7 +37,7 @@ public class GameEffectEngineTests : IDisposable
     [Fact]
     public async System.Threading.Tasks.Task Render_BombDefused_ResetsPulse()
     {
-        var settings = new SettingsManager(Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString()));
+        var settings = new SettingsManager(_testDir);
         await settings.InitializeAsync();
         settings.LayoutConfig = new LedLayoutConfig { LeftCount = 10, TopCount = 20, RightCount = 10, TotalLeds = 40 };
         var engine = new GameEffectEngine(settings);
@@ -62,7 +63,7 @@ public class GameEffectEngineTests : IDisposable
     [Fact]
     public async System.Threading.Tasks.Task ResetState_ClearsBombState()
     {
-        var settings = new SettingsManager(Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString()));
+        var settings = new SettingsManager(_testDir);
         await settings.InitializeAsync();
         settings.LayoutConfig = new LedLayoutConfig { LeftCount = 10, TopCount = 20, RightCount = 10, TotalLeds = 40 };
         var engine = new GameEffectEngine(settings);
@@ -90,7 +91,7 @@ public class GameEffectEngineTests : IDisposable
     [Fact]
     public async System.Threading.Tasks.Task Render_Spectator_ClearsLocalData()
     {
-        var settings = new SettingsManager(Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString()));
+        var settings = new SettingsManager(_testDir);
         await settings.InitializeAsync();
         settings.LayoutConfig = new LedLayoutConfig { LeftCount = 10, TopCount = 20, RightCount = 10, TotalLeds = 40 };
         var engine = new GameEffectEngine(settings);
@@ -117,7 +118,7 @@ public class GameEffectEngineTests : IDisposable
     [Fact]
     public async System.Threading.Tasks.Task Render_Bomb_PulseIsFrameRateIndependent()
     {
-        var settings = new SettingsManager(Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString()));
+        var settings = new SettingsManager(_testDir);
         await settings.InitializeAsync();
         settings.LayoutConfig = new LedLayoutConfig { LeftCount = 10, TopCount = 20, RightCount = 10, TotalLeds = 40 };
         var engine = new GameEffectEngine(settings);
@@ -141,7 +142,7 @@ public class GameEffectEngineTests : IDisposable
     [Fact]
     public async System.Threading.Tasks.Task Render_Health_TransitionColors()
     {
-        var settings = new SettingsManager(Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString()));
+        var settings = new SettingsManager(_testDir);
         await settings.InitializeAsync();
         settings.LayoutConfig = new LedLayoutConfig { LeftCount = 10, TopCount = 20, RightCount = 10, TotalLeds = 40 };
         var engine = new GameEffectEngine(settings);
@@ -197,7 +198,7 @@ public class GameEffectEngineTests : IDisposable
     [Fact]
     public async System.Threading.Tasks.Task Render_Ammo_TransitionColors()
     {
-        var settings = new SettingsManager(Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString()));
+        var settings = new SettingsManager(_testDir);
         await settings.InitializeAsync();
         settings.LayoutConfig = new LedLayoutConfig { LeftCount = 10, TopCount = 20, RightCount = 10, TotalLeds = 40 };
         var engine = new GameEffectEngine(settings);
@@ -251,7 +252,7 @@ public class GameEffectEngineTests : IDisposable
     [Fact]
     public async System.Threading.Tasks.Task Render_Armor_TransitionColors()
     {
-        var settings = new SettingsManager(Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString()));
+        var settings = new SettingsManager(_testDir);
         await settings.InitializeAsync();
         settings.LayoutConfig = new LedLayoutConfig { LeftCount = 10, TopCount = 20, RightCount = 10, TotalLeds = 40 };
         var engine = new GameEffectEngine(settings);
@@ -306,10 +307,9 @@ public class GameEffectEngineTests : IDisposable
     }
     public void Dispose()
     {
-        var tempRoot = Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests");
-        if (Directory.Exists(tempRoot))
+        if (Directory.Exists(_testDir))
         {
-            try { Directory.Delete(tempRoot, true); } catch { }
+            try { Directory.Delete(_testDir, true); } catch { }
         }
     }
 }

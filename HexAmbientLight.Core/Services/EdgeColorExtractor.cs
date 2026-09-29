@@ -92,34 +92,27 @@ public class EdgeColorExtractor
         return rgbOutput;
     }
 
-    private static (byte r, byte g, byte b) AverageBlock(
+                private static (byte r, byte g, byte b) AverageBlock(
         ReadOnlySpan<byte> bgra, int strideWidth, 
         int xStart, int xEnd, int yStart, int yEnd)
     {
         long sumR = 0, sumG = 0, sumB = 0;
         int count = 0;
+        int sampleStep = 4;
 
-        for (int y = yStart; y < yEnd; y++)
+        for (int y = yStart; y < yEnd; y += sampleStep)
         {
             int rowOffset = y * strideWidth * 4;
-            for (int x = xStart; x < xEnd; x++)
+            for (int x = xStart; x < xEnd; x += sampleStep)
             {
                 int pixelOffset = rowOffset + (x * 4);
-                
                 sumB += bgra[pixelOffset];
                 sumG += bgra[pixelOffset + 1];
                 sumR += bgra[pixelOffset + 2];
-                // bgra[pixelOffset + 3] is Alpha, ignore
                 count++;
             }
         }
-
         if (count == 0) return (0, 0, 0);
-
-        return (
-            (byte)(sumR / count),
-            (byte)(sumG / count),
-            (byte)(sumB / count)
-        );
+        return ((byte)(sumR / count), (byte)(sumG / count), (byte)(sumB / count));
     }
 }

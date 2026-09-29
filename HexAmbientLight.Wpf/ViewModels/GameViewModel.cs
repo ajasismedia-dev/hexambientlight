@@ -26,8 +26,11 @@ public partial class GameViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isSpectating = false;
 
-    [ObservableProperty]
+        [ObservableProperty]
     private bool _localPlayerDataValid = false;
+
+    [ObservableProperty]
+    private string _ammoDisplay = "—";
 
     public GameViewModel(Cs2GsiListener gsiListener)
     {
@@ -50,15 +53,37 @@ public partial class GameViewModel : ViewModelBase
             LocalPlayerDataValid = state.IsLocalPlayerDataValid;
             IsSpectating = !state.IsLocalPlayerDataValid && state.Player != null;
 
-            if (state.IsLocalPlayerDataValid)
+                        if (state.IsLocalPlayerDataValid)
             {
                 Health = state.Player?.State?.Health ?? 0;
                 Armor = state.Player?.State?.Armor ?? 0;
+
+                string ammo = "—";
+                if (state.Player?.Weapons != null)
+                {
+                    foreach (var w in state.Player.Weapons.Values)
+                    {
+                        if (w.State == "active")
+                        {
+                            if (w.Type == "Knife" || w.Type == "Grenade" || w.Type == "C4")
+                            {
+                                ammo = "—";
+                            }
+                            else
+                            {
+                                ammo = $"{w.AmmoClip} / {w.AmmoClipMax}";
+                            }
+                            break;
+                        }
+                    }
+                }
+                AmmoDisplay = ammo;
             }
             else
             {
                 Health = 0;
                 Armor = 0;
+                AmmoDisplay = "—";
             }
         }
         else
@@ -66,6 +91,7 @@ public partial class GameViewModel : ViewModelBase
             BombState = "Inactive";
             Health = 0;
             Armor = 0;
+            AmmoDisplay = "—";
             LocalPlayerDataValid = false;
             IsSpectating = false;
         }

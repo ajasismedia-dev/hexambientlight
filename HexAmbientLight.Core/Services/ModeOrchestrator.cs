@@ -96,46 +96,44 @@ public class ModeOrchestrator : IDisposable
         Log.Information("Mode Orchestrator started.");
     }
 
-    private async Task OrchestrateLoop(CancellationToken token)
+        private async Task OrchestrateLoop(CancellationToken token)
     {
-        var sw = new Stopwatch();
+        int currentTargetFps = _settingsManager.AppSettings.TargetFps;
+        if (currentTargetFps <= 0) currentTargetFps = 30;
+        var periodicTimer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000.0 / currentTargetFps));
 
         while (!token.IsCancellationRequested)
         {
-            sw.Restart();
-
-            if (!_isSuspended)
+            try
             {
-                try
+                await periodicTimer.WaitForNextTickAsync(token);
+
+                int newFps = _settingsManager.AppSettings.TargetFps;
+                if (newFps > 0 && newFps != currentTargetFps)
+                {
+                    currentTargetFps = newFps;
+                    periodicTimer.Dispose();
+                    periodicTimer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000.0 / currentTargetFps));
+                }
+
+                if (!_isSuspended)
                 {
                     DetermineEffectiveMode();
                     await HandleModeTransitionsAsync();
                     await ExecuteEffectiveModeAsync();
                 }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Exception in OrchestrateLoop");
-                }
             }
-
-            int targetFps = _settingsManager.AppSettings.TargetFps;
-            if (targetFps <= 0) targetFps = 30;
-
-            int targetFrameTimeMs = 1000 / targetFps;
-            int elapsed = (int)sw.ElapsedMilliseconds;
-
-            if (elapsed < targetFrameTimeMs)
+            catch (TaskCanceledException)
             {
-                try
-                {
-                    await Task.Delay(targetFrameTimeMs - elapsed, token);
-                }
-                catch (TaskCanceledException)
-                {
-                    break;
-                }
+                break;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Exception in OrchestrateLoop");
             }
         }
+        
+        periodicTimer.Dispose();
     }
 
     private void DetermineEffectiveMode()
@@ -209,6 +207,9 @@ public class ModeOrchestrator : IDisposable
         }
     }
 
+        private readonly ImagePostProcessor _postProcessor = new ImagePostProcessor();
+    private byte[]? _reusableFrameBuffer;
+
     private async Task ExecuteEffectiveModeAsync()
     {
         if (_effectiveMode == EffectiveMode.Off) return;
@@ -216,7 +217,6 @@ public class ModeOrchestrator : IDisposable
         var layout = _settingsManager.LayoutConfig;
         if (!layout.IsValid)
         {
-            Log.Debug("Layout is INVALID. Left={Left}, Top={Top}, Right={Right}, Total={Total}", layout.LeftCount, layout.TopCount, layout.RightCount, layout.TotalLeds);
             return;
         }
 
@@ -224,10 +224,15 @@ public class ModeOrchestrator : IDisposable
 
         if (_effectiveMode == EffectiveMode.Ambilight)
         {
-            var frame = _screenCapturer.GetLatestFrameData();
-            if (frame.Length > 0)
+            int requiredLength = _screenCapturer.Width * _screenCapturer.Height * 4;
+            if (_reusableFrameBuffer == null || _reusableFrameBuffer.Length != requiredLength)
             {
-                rgbData = EdgeColorExtractor.Extract(frame, _screenCapturer.Width, _screenCapturer.Height, layout);
+                if (requiredLength > 0) _reusableFrameBuffer = new byte[requiredLength];
+            }
+
+            if (_reusableFrameBuffer != null && _screenCapturer.TryGetLatestFrameData(_reusableFrameBuffer))
+            {
+                rgbData = EdgeColorExtractor.Extract(_reusableFrameBuffer, _screenCapturer.Width, _screenCapturer.Height, layout);
             }
         }
         else if (_effectiveMode == EffectiveMode.Game)
@@ -251,6 +256,7 @@ public class ModeOrchestrator : IDisposable
 
         if (rgbData.Length > 0)
         {
+            _postProcessor.ApplyPostProcessing(rgbData, _settingsManager.AppSettings);
             await _wledController.SendDdpFrameAsync(rgbData);
         }
         else
