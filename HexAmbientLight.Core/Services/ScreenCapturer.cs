@@ -31,7 +31,7 @@ public class ScreenCapturer : IDisposable
     private byte[] _latestRgbaData = Array.Empty<byte>();
     private bool _isRunning;
     private int _frameCount;
-    private DateTime _lastFpsTime = DateTime.UtcNow;
+    private readonly System.Diagnostics.Stopwatch _fpsStopwatch = System.Diagnostics.Stopwatch.StartNew();
     private bool _firstFrameReceived;
     public int CurrentFps { get; set; }
     
@@ -213,12 +213,11 @@ public class ScreenCapturer : IDisposable
         _d3dContext.Unmap(_stagingTexture, 0);
 
         _frameCount++;
-        var now = DateTime.UtcNow;
-        if ((now - _lastFpsTime).TotalSeconds >= 1.0)
+        if (_fpsStopwatch.Elapsed.TotalSeconds >= 1.0)
         {
             CurrentFps = _frameCount;
             _frameCount = 0;
-            _lastFpsTime = now;
+            _fpsStopwatch.Restart();
         }
 
         if (!_firstFrameReceived)

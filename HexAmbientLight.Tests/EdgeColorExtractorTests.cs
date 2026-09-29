@@ -18,11 +18,11 @@ public class EdgeColorExtractorTests
         Assert.Equal(40 * 3, result.Length);
     }
 
-    [Fact]
+        [Fact]
     public void PhysicalMapping_CorrectlyExtractsLedPositions()
     {
-        int w = 100;
-        int h = 100;
+        int w = 1000;
+        int h = 1000;
         var layout = new LedLayoutConfig 
         { 
             LeftCount = 14, TopCount = 26, RightCount = 14, TotalLeds = 54 
@@ -30,7 +30,6 @@ public class EdgeColorExtractorTests
         
         var bgra = new byte[w * h * 4];
 
-        // Helper to fill a region
         void FillRegion(int xStart, int xEnd, int yStart, int yEnd, byte b, byte g, byte r)
         {
             for (int y = yStart; y < yEnd; y++)
@@ -46,49 +45,49 @@ public class EdgeColorExtractorTests
             }
         }
 
-        int leftBh = h / 14; // 7
-        int topBw = w / 26; // 3
-        int rightBh = h / 14; // 7
+        // Left depth = 30 (0..29). Block h = 1000/14 = 71.
+        // LED 0 (Left Bottom): X:0..29, Y: 1000 - 71 = 929..1000. 
+        // Bottom overlap is Y > 1000-30=970? Wait, there is no bottom strip! So Y:930..990 is safe.
+        FillRegion(10, 20, 940, 960, 0, 0, 255); // Red in LED 0
 
-                // LED 0: Left Bottom (x:0-3, y:93-100)
-        FillRegion(0, 3, 93, 100, 0, 0, 255); // Red
+        // Top depth = 30 (0..29). Block w = 1000/26 = 38.
+        // LED 13 (Left Top): X:0..29, Y:0..71. Overlap with Top is Y:0..29.
+        // So Y:40..60 is safe for LED 13 only.
+        FillRegion(10, 20, 40, 60, 0, 255, 0); // Green in LED 13
 
-        // LED 13: Left Top (x:0-3, y:0-7)
-        FillRegion(0, 3, 0, 7, 0, 255, 0); // Green
+        // LED 14 (Top Left): X:0..38, Y:0..29. Overlap with Left is X:0..29.
+        // So X:32..37 is safe for LED 14 only.
+        FillRegion(32, 37, 10, 20, 255, 0, 0); // Blue in LED 14
 
-        // LED 14: Top Left (x:0-3, y:0-3)
-        FillRegion(0, 3, 0, 3, 255, 0, 0); // Blue
+        // LED 39 (Top Right): X: 1000-38 = 962..1000, Y:0..29. Overlap with Right is X:970..1000 (1000-30).
+        // So X: 963..968 is safe for LED 39 only.
+        FillRegion(963, 968, 10, 20, 255, 255, 0); // Cyan in LED 39
 
-        // LED 39: Top Right (x:75-78, y:0-3)
-        FillRegion(75, 78, 0, 3, 255, 255, 0); // Cyan
+        // Right depth = 30 (970..1000). Block h = 71.
+        // LED 40 (Right Top): X:970..1000, Y:0..71. Overlap with Top is Y:0..29.
+        // So Y:40..60 is safe for LED 40 only.
+        FillRegion(980, 990, 40, 60, 255, 0, 255); // Magenta in LED 40
 
-        // LED 40: Right Top (x:97-100, y:0-7)
-        FillRegion(97, 100, 0, 7, 255, 0, 255); // Magenta
-
-        // LED 53: Right Bottom (x:97-100, y:93-100)
-        FillRegion(97, 100, 93, 100, 0, 255, 255); // Yellow
+        // LED 53 (Right Bottom): X:970..1000, Y:929..1000.
+        FillRegion(980, 990, 940, 960, 0, 255, 255); // Yellow in LED 53
 
         var result = EdgeColorExtractor.Extract(bgra, w, h, layout);
 
         Assert.Equal(54 * 3, result.Length);
 
-        // Averages will be (255 * 1) / (3*7) for left/right = 255 / 21 = 12
-        // For top it will be (255 * 1) / (3*3) = 255 / 9 = 28
-        // Let's just assert > 0 instead of 255
-        
         // Check LED 0 (Red)
-        Assert.True(result[0 * 3] > 0); // R
-        Assert.Equal(0, result[0 * 3 + 1]); // G
-        Assert.Equal(0, result[0 * 3 + 2]); // B
+        Assert.True(result[0 * 3] > 0);
+        Assert.Equal(0, result[0 * 3 + 1]);
+        Assert.Equal(0, result[0 * 3 + 2]);
 
         // Check LED 13 (Green)
         Assert.Equal(0, result[13 * 3]);
         Assert.True(result[13 * 3 + 1] > 0);
-        // Assert.Equal(0, result[13 * 3 + 2]);
+        Assert.Equal(0, result[13 * 3 + 2]);
 
         // Check LED 14 (Blue)
         Assert.Equal(0, result[14 * 3]);
-        // Assert.Equal(0, result[14 * 3 + 1]);
+        Assert.Equal(0, result[14 * 3 + 1]);
         Assert.True(result[14 * 3 + 2] > 0);
 
         // Check LED 39 (Cyan)

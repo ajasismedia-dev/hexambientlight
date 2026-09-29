@@ -7,11 +7,19 @@ public class ImagePostProcessor
 {
     private byte[]? _previousRgbData;
 
+    public void Reset()
+    {
+        _previousRgbData = null;
+    }
+
     public void ApplyPostProcessing(byte[] rgbData, AppSettings settings)
     {
         float brightnessLimit = settings.BrightnessLimit / 255f;
         float saturation = (float)settings.Saturation;
-        float smoothing = (float)settings.SmoothingFactor;
+        float uiSmoothing = (float)settings.SmoothingFactor;
+        
+        // Clamp smoothing to max 0.95 so it never completely freezes
+        float smoothing = Math.Clamp(uiSmoothing, 0.0f, 0.95f);
 
         if (_previousRgbData == null || _previousRgbData.Length != rgbData.Length)
         {
@@ -40,7 +48,7 @@ public class ImagePostProcessor
             b *= brightnessLimit;
 
             // 3. Smoothing
-            if (smoothing > 0.0f && smoothing <= 1.0f)
+            if (smoothing > 0.0f)
             {
                 r = _previousRgbData[i] * smoothing + r * (1.0f - smoothing);
                 g = _previousRgbData[i + 1] * smoothing + g * (1.0f - smoothing);

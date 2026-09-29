@@ -198,6 +198,11 @@ public class ModeOrchestrator : IDisposable
             }
 
             // Reset Game state if leaving Game mode
+                        if (_effectiveMode != _lastEffectiveMode)
+            {
+                _postProcessor.Reset();
+            }
+
             if (_lastEffectiveMode == EffectiveMode.Game && _effectiveMode != EffectiveMode.Game)
             {
                 _gameEngine.ResetState();
@@ -259,9 +264,7 @@ public class ModeOrchestrator : IDisposable
             _postProcessor.ApplyPostProcessing(rgbData, _settingsManager.AppSettings);
             await _wledController.SendDdpFrameAsync(rgbData);
         }
-        else
-        {
-            }
+        
     }
 
     public void Stop()

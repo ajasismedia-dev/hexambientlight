@@ -17,7 +17,7 @@ public class WledController : IDisposable
     private WledStateResponse? _savedState;
     private bool _isRealtimeActive;
     private int _frameCount;
-    private DateTime _lastFpsTime = DateTime.UtcNow;
+    private readonly System.Diagnostics.Stopwatch _fpsStopwatch = System.Diagnostics.Stopwatch.StartNew();
     private bool _firstFrameSent;
     public bool IsConnected { get; private set; }
     public string? CurrentIp => _settingsManager.AppSettings.WledIpAddress;
@@ -86,12 +86,11 @@ public class WledController : IDisposable
         var packets = DdpPacketizer.Packetize(rgbData.Span);
 
         _frameCount++;
-        var now = DateTime.UtcNow;
-        if ((now - _lastFpsTime).TotalSeconds >= 1.0)
+        if (_fpsStopwatch.Elapsed.TotalSeconds >= 1.0)
         {
             CurrentSendFps = _frameCount;
             _frameCount = 0;
-            _lastFpsTime = now;
+            _fpsStopwatch.Restart();
         }
 
         if (!_firstFrameSent)

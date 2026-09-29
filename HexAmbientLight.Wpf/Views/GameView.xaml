@@ -50,7 +50,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Ammo (Top Zone Placeholder) -->
+            <!-- Ammo (Active Weapon) -->
             <Border Style="{DynamicResource CardStyle}" Margin="5,0,0,0">
                 <StackPanel>
                     <Border Height="4" CornerRadius="2" Background="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,10"/>

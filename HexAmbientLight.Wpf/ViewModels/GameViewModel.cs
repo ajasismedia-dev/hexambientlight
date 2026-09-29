@@ -65,7 +65,7 @@ public partial class GameViewModel : ViewModelBase
                     {
                         if (w.State == "active")
                         {
-                            if (w.Type == "Knife" || w.Type == "Grenade" || w.Type == "C4")
+                            if (w.AmmoClipMax <= 0 || w.Type == "Knife" || w.Type == "Grenade" || w.Type == "C4")
                             {
                                 ammo = "—";
                             }
