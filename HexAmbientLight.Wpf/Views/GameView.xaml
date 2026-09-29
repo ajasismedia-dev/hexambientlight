@@ -1,0 +1,72 @@
+<UserControl x:Class="HexAmbientLight.Wpf.Views.GameView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.25"/>
+                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="15" To="0" Duration="0:0:0.25">
+                        <DoubleAnimation.EasingFunction>
+                            <QuadraticEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <UserControl.RenderTransform>
+        <TranslateTransform Y="0"/>
+    </UserControl.RenderTransform>
+    <StackPanel Margin="10">
+        <TextBlock Text="Game (CS2)" Style="{DynamicResource TitleTextBlockStyle}" Margin="0,0,0,5"/>
+        <TextBlock Text="Counter-Strike 2 Game State Integration" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,20"/>
+
+        <!-- Main Status -->
+        <Border Style="{DynamicResource CardStyle}" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="GSI Status: " FontSize="16" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding Cs2Status}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource AccentCyanBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Stats -->
+        <UniformGrid Columns="3" Margin="0,0,0,20">
+            <!-- Health -->
+            <Border Style="{DynamicResource CardStyle}" Margin="0,0,5,0">
+                <StackPanel>
+                    <Border Height="4" CornerRadius="2" Background="{DynamicResource AccentRedBrush}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Health (Left Zone)" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding Health}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource AccentRedBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Armor -->
+            <Border Style="{DynamicResource CardStyle}" Margin="5,0,5,0">
+                <StackPanel>
+                    <Border Height="4" CornerRadius="2" Background="{DynamicResource AccentBlueBrush}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Armor (Right Zone)" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding Armor}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource AccentBlueBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Ammo (Top Zone Placeholder) -->
+            <Border Style="{DynamicResource CardStyle}" Margin="5,0,0,0">
+                <StackPanel>
+                    <Border Height="4" CornerRadius="2" Background="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Ammo (Top Zone)" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
+                    <TextBlock Text="Active" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <!-- Bomb -->
+        <Border Style="{DynamicResource CardStyle}" BorderBrush="{DynamicResource AccentOrangeBrush}">
+            <StackPanel>
+                <TextBlock Text="Bomb Status" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
+                <TextBlock Text="{Binding BombState}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}"/>
+                <TextBlock Text="Estimated sync running..." Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

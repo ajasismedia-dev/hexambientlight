@@ -1,0 +1,119 @@
+<UserControl x:Class="HexAmbientLight.Wpf.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.25"/>
+                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="15" To="0" Duration="0:0:0.25">
+                        <DoubleAnimation.EasingFunction>
+                            <QuadraticEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <UserControl.RenderTransform>
+        <TranslateTransform Y="0"/>
+    </UserControl.RenderTransform>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="10">
+            <!-- Header -->
+            <TextBlock Text="Dashboard" Style="{DynamicResource TitleTextBlockStyle}" Margin="0,0,0,5"/>
+            <TextBlock Text="Overview and Quick Controls" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,20"/>
+
+            <!-- Status Cards -->
+            <UniformGrid Columns="4" Margin="0,0,0,20">
+                <!-- WLED Status -->
+                <Border Style="{DynamicResource CardStyle}" Margin="0,0,10,0">
+                    <StackPanel>
+                        <TextBlock Text="WLED Connection" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
+                        <Border Background="{DynamicResource Surface2Brush}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" Margin="0,0,0,5">
+                            <TextBlock Text="{Binding WledStatus}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource AccentCyanBrush}"/>
+                        </Border>
+                        <TextBlock Text="{Binding WledIp, StringFormat=IP: {0}}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Current Mode -->
+                <Border Style="{DynamicResource CardStyle}" Margin="5,0,5,0">
+                    <StackPanel>
+                        <TextBlock Text="Active Mode" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding EffectiveMode}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource AccentPurpleBrush}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedMode, StringFormat=Selected: {0}}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- CS2 Status -->
+                <Border Style="{DynamicResource CardStyle}" Margin="5,0,5,0">
+                    <StackPanel>
+                        <TextBlock Text="CS2 GSI" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding Cs2Status}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding BombState, StringFormat=Bomb: {0}}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Capture Performance -->
+                <Border Style="{DynamicResource CardStyle}" Margin="10,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Performance" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SendFps, StringFormat={}{0} Send FPS}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource AccentGreenBrush}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding CaptureFps, StringFormat={}{0} Capture FPS}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Mode Switcher -->
+            <Border Style="{DynamicResource CardStyle}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Mode Switcher" Style="{DynamicResource TitleTextBlockStyle}" FontSize="18" Margin="0,0,0,15"/>
+                    <Border Background="{DynamicResource Surface2Brush}" CornerRadius="8" Padding="5" HorizontalAlignment="Stretch">
+                        <UniformGrid Columns="5">
+                            <Button Content="Auto" Command="{Binding SetModeCommand}" CommandParameter="Auto" Margin="2"/>
+                            <Button Content="Ambilight" Command="{Binding SetModeCommand}" CommandParameter="Ambilight" Margin="2"/>
+                            <Button Content="Game (CS2)" Command="{Binding SetModeCommand}" CommandParameter="Game" Margin="2"/>
+                            <Button Content="Manual" Command="{Binding SetModeCommand}" CommandParameter="Manual" Margin="2"/>
+                            <Button Content="Off" Command="{Binding SetModeCommand}" CommandParameter="Off" Margin="2"/>
+                        </UniformGrid>
+                    </Border>
+                </StackPanel>
+            </Border>
+            
+            <!-- Monitor Preview Hero -->
+            <Border Style="{DynamicResource CardStyle}" Height="300">
+                <Grid>
+                    <!-- Slow Ambient Gradient background -->
+                    <Border CornerRadius="8" Opacity="0.1">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#29D3FF" Offset="0.0"/>
+                                <GradientStop Color="#9D6BFF" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <!-- Monitor Silhouette -->
+                        <Border Width="360" Height="200" BorderBrush="{DynamicResource AccentPurpleBrush}" BorderThickness="4,4,4,0" CornerRadius="8,8,0,0">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#9D6BFF" BlurRadius="30" ShadowDepth="0" Opacity="0.5"/>
+                            </Border.Effect>
+                            <Border Background="{DynamicResource BgMainBrush}" CornerRadius="4,4,0,0">
+                                <TextBlock Text="Live Output" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            </Border>
+                        </Border>
+                        <Border Width="120" Height="20" Background="{DynamicResource Surface2Brush}" CornerRadius="0,0,4,4" Margin="0,0,0,10"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
