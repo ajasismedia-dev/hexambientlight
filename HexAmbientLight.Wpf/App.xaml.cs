@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +50,7 @@ public partial class App : System.Windows.Application
                     services.AddSingleton<DashboardViewModel>();
                     services.AddSingleton<AmbilightViewModel>();
                     services.AddSingleton<GameViewModel>();
-                    services.AddSingleton<ManualViewModel>();
+                    services.AddSingleton<LightingStudioViewModel>();
                     services.AddSingleton<DeviceViewModel>();
                     services.AddSingleton<SettingsViewModel>();
                     services.AddSingleton<DiagnosticsViewModel>();
@@ -153,3 +153,4 @@ public partial class App : System.Windows.Application
         base.OnExit(e);
     }
 }
+

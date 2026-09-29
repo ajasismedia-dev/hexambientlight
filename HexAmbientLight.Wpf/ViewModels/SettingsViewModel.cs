@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using HexAmbientLight.Core.Models;
 using HexAmbientLight.Core.Services;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Input;
+using HexAmbientLight.Core.Models;
+using HexAmbientLight.Core.Localization;
 
 namespace HexAmbientLight.Wpf.ViewModels;
 
@@ -11,22 +10,30 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly SettingsManager _settingsManager;
 
     [ObservableProperty]
-    private bool _closeToTray;
+    private string _wledIpAddress;
 
     [ObservableProperty]
-    private bool _startWithWindows;
+    private string _uiLanguage;
+
+    public string[] AvailableLanguages { get; } = { "en-US", "tr-TR" };
 
     public SettingsViewModel(SettingsManager settingsManager)
     {
         _settingsManager = settingsManager;
-        CloseToTray = _settingsManager.AppSettings.CloseToTray;
-        // StartWithWindows logic typically uses registry or startup folder. Skipping full implementation for UI shell, just placeholder.
+        WledIpAddress = _settingsManager.AppSettings.WledIpAddress ?? "192.168.1.2";
+        UiLanguage = _settingsManager.AppSettings.UiLanguage ?? "en-US";
     }
 
-    [RelayCommand]
-    private async Task SaveSettingsAsync()
+    partial void OnWledIpAddressChanged(string value)
     {
-        _settingsManager.AppSettings.CloseToTray = CloseToTray;
-        await _settingsManager.SaveSettingsAsync();
+        _settingsManager.AppSettings.WledIpAddress = value;
+        _ = _settingsManager.SaveSettingsAsync();
+    }
+
+    partial void OnUiLanguageChanged(string value)
+    {
+        _settingsManager.AppSettings.UiLanguage = value;
+        _ = _settingsManager.SaveSettingsAsync();
+        LocalizationManager.Instance.CurrentLanguage = value;
     }
 }

@@ -1,4 +1,4 @@
-<Window x:Class="HexAmbientLight.Wpf.MainWindow"
+﻿<Window x:Class="HexAmbientLight.Wpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModels="clr-namespace:HexAmbientLight.Wpf.ViewModels"
@@ -21,8 +21,8 @@
         <DataTemplate DataType="{x:Type viewModels:GameViewModel}">
             <views:GameView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:ManualViewModel}">
-            <views:ManualView />
+        <DataTemplate DataType="{x:Type viewModels:LightingStudioViewModel}">
+            <views:LightingStudioView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:DeviceViewModel}">
             <views:DeviceView />
@@ -56,20 +56,20 @@
                     <TextBlock Text="HexAmbientLight" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="16" FontWeight="SemiBold" Margin="12,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Navigation -->
+                                <!-- Navigation -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
-                    <StackPanel Margin="10,0">
-                        <RadioButton Content="Dashboard" Command="{Binding NavigateCommand}" CommandParameter="Dashboard" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:DashboardViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}"/>
-                        <RadioButton Content="Ambilight" Command="{Binding NavigateCommand}" CommandParameter="Ambilight" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:AmbilightViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}" Margin="0,4,0,0"/>
-                        <RadioButton Content="CS2 Game Sync" Command="{Binding NavigateCommand}" CommandParameter="Game" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:GameViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}" Margin="0,4,0,0"/>
-                        <RadioButton Content="Manual Color" Command="{Binding NavigateCommand}" CommandParameter="Manual" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:ManualViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}" Margin="0,4,0,0"/>
-                        
-                        <Separator Margin="0,16" Background="{DynamicResource SurfaceBorderBrush}"/>
-                        
-                        <RadioButton Content="WLED Devices" Command="{Binding NavigateCommand}" CommandParameter="Device" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:DeviceViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}"/>
-                        <RadioButton Content="Settings" Command="{Binding NavigateCommand}" CommandParameter="Settings" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:SettingsViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}" Margin="0,4,0,0"/>
-                        <RadioButton Content="Diagnostics" Command="{Binding NavigateCommand}" CommandParameter="Diagnostics" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:DiagnosticsViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}" Margin="0,4,0,0"/>
-                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding NavigationItems}" Margin="10,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton Content="{Binding DisplayName}" 
+                                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                             CommandParameter="{Binding InternalName}" 
+                                             IsChecked="{Binding IsSelected}" 
+                                             Style="{DynamicResource NavMenuRadioButtonStyle}" 
+                                             Margin="0,4,0,0"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </Grid>
         </Border>
@@ -80,3 +80,5 @@
         </Border>
     </Grid>
 </Window>
+
+

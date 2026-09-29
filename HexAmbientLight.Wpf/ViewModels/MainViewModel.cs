@@ -1,8 +1,10 @@
-using System;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using HexAmbientLight.Core.Localization;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace HexAmbientLight.Wpf.ViewModels;
 
@@ -18,13 +20,13 @@ public partial class MainViewModel : ViewModelBase
 
     public MainViewModel(IServiceProvider serviceProvider)
     {
-        NavigationItems.Add(new NavigationItem("Dashboard", "\uE80F", serviceProvider.GetRequiredService<DashboardViewModel>()));
-        NavigationItems.Add(new NavigationItem("Ambilight", "\uE7F4", serviceProvider.GetRequiredService<AmbilightViewModel>()));
-        NavigationItems.Add(new NavigationItem("Game", "\uE909", serviceProvider.GetRequiredService<GameViewModel>()));
-        NavigationItems.Add(new NavigationItem("Manual", "\uE790", serviceProvider.GetRequiredService<ManualViewModel>()));
-        NavigationItems.Add(new NavigationItem("Device", "\uE770", serviceProvider.GetRequiredService<DeviceViewModel>()));
-        NavigationItems.Add(new NavigationItem("Settings", "\uE713", serviceProvider.GetRequiredService<SettingsViewModel>()));
-        NavigationItems.Add(new NavigationItem("Diagnostics", "\uE9D9", serviceProvider.GetRequiredService<DiagnosticsViewModel>()));
+        NavigationItems.Add(new NavigationItem("Nav.Dashboard", "Dashboard", "\uE80F", serviceProvider.GetRequiredService<DashboardViewModel>()));
+        NavigationItems.Add(new NavigationItem("Nav.Ambilight", "Ambilight", "\uE7F4", serviceProvider.GetRequiredService<AmbilightViewModel>()));
+        NavigationItems.Add(new NavigationItem("Nav.Game", "Game", "\uE909", serviceProvider.GetRequiredService<GameViewModel>()));
+        NavigationItems.Add(new NavigationItem("Nav.LightingStudio", "LightingStudio", "\uE790", serviceProvider.GetRequiredService<LightingStudioViewModel>()));
+        NavigationItems.Add(new NavigationItem("Nav.Device", "Device", "\uE770", serviceProvider.GetRequiredService<DeviceViewModel>()));
+        NavigationItems.Add(new NavigationItem("Nav.Settings", "Settings", "\uE713", serviceProvider.GetRequiredService<SettingsViewModel>()));
+        NavigationItems.Add(new NavigationItem("Nav.Diagnostics", "Diagnostics", "\uE9D9", serviceProvider.GetRequiredService<DiagnosticsViewModel>()));
 
         SelectedNavigationItem = NavigationItems[0];
     }
@@ -40,36 +42,41 @@ public partial class MainViewModel : ViewModelBase
             }
         }
     }
+
     [RelayCommand]
     private void Navigate(string targetName)
     {
-        foreach (var item in NavigationItems)
-        {
-            if (item.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase) || 
-               (item.Name == "CS2 Game Sync" && targetName == "Game") ||
-               (item.Name == "Manual Color" && targetName == "Manual") ||
-               (item.Name == "WLED Devices" && targetName == "Device"))
-            {
-                SelectedNavigationItem = item;
-                break;
-            }
-        }
+        var item = NavigationItems.FirstOrDefault(i => 
+            i.InternalName.Equals(targetName, StringComparison.OrdinalIgnoreCase) || 
+            (i.InternalName == "LightingStudio" && targetName == "Manual"));
+        if (item != null) SelectedNavigationItem = item;
     }
 }
 
 public partial class NavigationItem : ObservableObject
 {
-    public string Name { get; }
+    public string InternalName { get; }
+    private string _titleKey;
+    public string TitleKey
+    {
+        get => _titleKey;
+        set { SetProperty(ref _titleKey, value); OnPropertyChanged(nameof(DisplayName)); }
+    }
     public string Icon { get; }
     public ViewModelBase ViewModel { get; }
+
+    public string DisplayName => LocalizationManager.Instance.GetString(TitleKey);
 
     [ObservableProperty]
     private bool _isSelected;
 
-    public NavigationItem(string name, string icon, ViewModelBase viewModel)
+    public NavigationItem(string titleKey, string internalName, string icon, ViewModelBase viewModel)
     {
-        Name = name;
+        TitleKey = titleKey;
+        InternalName = internalName;
         Icon = icon;
         ViewModel = viewModel;
+
+        LocalizationManager.Instance.LanguageChanged += (s, e) => OnPropertyChanged(nameof(DisplayName));
     }
 }

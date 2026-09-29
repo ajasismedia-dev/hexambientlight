@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using HexAmbientLight.Core.Models;
+using HexAmbientLight.Core.Effects;
 using Serilog;
 
 using Microsoft.Win32;
@@ -201,6 +202,15 @@ public class ModeOrchestrator : IDisposable
                         if (_effectiveMode != _lastEffectiveMode)
             {
                 _postProcessor.Reset();
+                if (_effectiveMode == EffectiveMode.Manual)
+                {
+                    _effectStopwatch.Restart();
+                    _lastElapsed = 0;
+                }
+                else
+                {
+                    _effectStopwatch.Stop();
+                }
             }
 
             if (_lastEffectiveMode == EffectiveMode.Game && _effectiveMode != EffectiveMode.Game)
@@ -213,6 +223,9 @@ public class ModeOrchestrator : IDisposable
     }
 
         private readonly ImagePostProcessor _postProcessor = new ImagePostProcessor();
+    private readonly EffectEngine _effectEngine = new EffectEngine();
+    private readonly System.Diagnostics.Stopwatch _effectStopwatch = new System.Diagnostics.Stopwatch();
+    private double _lastElapsed;
     private byte[]? _reusableFrameBuffer;
 
     private async Task ExecuteEffectiveModeAsync()
@@ -250,13 +263,13 @@ public class ModeOrchestrator : IDisposable
         }
         else if (_effectiveMode == EffectiveMode.Manual)
         {
+            if (!_effectStopwatch.IsRunning) _effectStopwatch.Start();
+            double elapsed = _effectStopwatch.Elapsed.TotalSeconds;
+            double delta = elapsed - _lastElapsed;
+            _lastElapsed = elapsed;
+
             rgbData = new byte[layout.TotalLeds * 3];
-            for (int i = 0; i < layout.TotalLeds; i++)
-            {
-                rgbData[i * 3] = ManualColorR;
-                rgbData[i * 3 + 1] = ManualColorG;
-                rgbData[i * 3 + 2] = ManualColorB;
-            }
+            _effectEngine.Render(_settingsManager.AppSettings, layout.TotalLeds, rgbData, elapsed, delta);
         }
 
         if (rgbData.Length > 0)

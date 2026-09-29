@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 
 namespace HexAmbientLight.Core.Models;
@@ -31,4 +31,12 @@ public class AppSettings
 
     [JsonIgnore]
     public bool IsWledConfigured => !string.IsNullOrWhiteSpace(WledIpAddress);
+    public string UiLanguage { get; set; } = "en-US";
+    public string EffectId { get; set; } = "Static";
+    public string EffectPrimaryColorHex { get; set; } = "#FF00FFFF";
+    public string EffectSecondaryColorHex { get; set; } = "#FFFF00FF";
+    public string EffectTertiaryColorHex { get; set; } = "#FFFFFF00";
+    public double EffectSpeed { get; set; } = 0.5;
+    public double EffectIntensity { get; set; } = 1.0;
+    public int EffectDirection { get; set; } = 1;
 }

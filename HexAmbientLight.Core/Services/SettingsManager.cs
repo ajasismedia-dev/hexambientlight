@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -34,7 +34,7 @@ public class SettingsManager
         _layoutFilePath = Path.Combine(_settingsDirectory, "ledlayout.json");
     }
 
-    public async Task InitializeAsync()
+        public async Task InitializeAsync()
     {
         if (!Directory.Exists(_settingsDirectory))
         {
@@ -44,6 +44,15 @@ public class SettingsManager
 
         await LoadSettingsAsync();
         await LoadLayoutAsync();
+
+        // Apply localization
+        if (string.IsNullOrEmpty(AppSettings.UiLanguage) || AppSettings.UiLanguage == "auto")
+        {
+            var culture = System.Globalization.CultureInfo.InstalledUICulture.Name;
+            AppSettings.UiLanguage = culture.StartsWith("tr") ? "tr-TR" : "en-US";
+            _ = SaveSettingsAsync();
+        }
+        HexAmbientLight.Core.Localization.LocalizationManager.Instance.CurrentLanguage = AppSettings.UiLanguage;
     }
 
     private async Task LoadSettingsAsync()
@@ -54,7 +63,7 @@ public class SettingsManager
 
         if (!File.Exists(_settingsFilePath))
         {
-            AppSettings = new AppSettings { WledIpAddress = "192.168.1.2" };
+            AppSettings = new AppSettings { WledIpAddress = "192.168.1.2", UiLanguage = "auto" };
             await SaveSettingsAsync();
         }
         else
@@ -77,7 +86,7 @@ public class SettingsManager
             {
                 Log.Error(ex, "Failed to load AppSettings. Using defaults and backing up corrupted file.");
                 BackupCorruptedFile(_settingsFilePath);
-                AppSettings = new AppSettings { WledIpAddress = "192.168.1.2" };
+                AppSettings = new AppSettings { WledIpAddress = "192.168.1.2", UiLanguage = "auto" };
                 await SaveSettingsAsync();
             }
         }
@@ -177,3 +186,4 @@ public class SettingsManager
         }
     }
 }
+

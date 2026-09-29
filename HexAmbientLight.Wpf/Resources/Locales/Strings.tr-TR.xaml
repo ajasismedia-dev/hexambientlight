@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!-- General -->
+    <system:String x:Key="Str_AppTitle">Hex Ortam Işığı</system:String>
+    <system:String x:Key="Str_Connected">Bağlı</system:String>
+    <system:String x:Key="Str_Disconnected">Bağlantı Yok</system:String>
+    <system:String x:Key="Str_Inactive">Devre Dışı</system:String>
+    <system:String x:Key="Str_Active">Aktif</system:String>
+    <system:String x:Key="Str_SaveSettings">Ayarları Kaydet</system:String>
+    
+    <!-- Navigation -->
+    <system:String x:Key="Str_NavDashboard">Gösterge Paneli</system:String>
+    <system:String x:Key="Str_NavAmbilight">Ambilight</system:String>
+    <system:String x:Key="Str_NavLightingStudio">Aydınlatma Stüdyosu</system:String>
+    <system:String x:Key="Str_NavGame">Oyun Entegrasyonu</system:String>
+    <system:String x:Key="Str_NavDevice">Cihaz (WLED)</system:String>
+    <system:String x:Key="Str_NavSettings">Ayarlar</system:String>
+    <system:String x:Key="Str_NavDiagnostics">Tanılama</system:String>
+
+    <!-- Lighting Studio -->
+    <system:String x:Key="Str_LightingStudio_Title">Aydınlatma Stüdyosu</system:String>
+    <system:String x:Key="Str_LightingStudio_Desc">Kendi ortam aydınlatma sahnenizi oluşturun</system:String>
+    <system:String x:Key="Str_LightingStudio_Effects">Efektler</system:String>
+    <system:String x:Key="Str_LightingStudio_Colors">Renkler</system:String>
+    <system:String x:Key="Str_LightingStudio_PrimaryColor">Ana Renk</system:String>
+    <system:String x:Key="Str_LightingStudio_SecondaryColor">İkincil Renk</system:String>
+    <system:String x:Key="Str_LightingStudio_AccentColor">Vurgu Rengi</system:String>
+    <system:String x:Key="Str_LightingStudio_Speed">Hız</system:String>
+    <system:String x:Key="Str_LightingStudio_Intensity">Yoğunluk</system:String>
+    <system:String x:Key="Str_LightingStudio_Direction">Yön</system:String>
+    <system:String x:Key="Str_LightingStudio_Forward">İleri</system:String>
+    <system:String x:Key="Str_LightingStudio_Reverse">Ters</system:String>
+    <system:String x:Key="Str_LightingStudio_QuickColors">Hızlı Renkler</system:String>
+    <system:String x:Key="Str_LightingStudio_LivePreview">Canlı Önizleme</system:String>
+
+    <!-- Post Processing -->
+    <system:String x:Key="Str_Brightness">Parlaklık</system:String>
+    <system:String x:Key="Str_Saturation">Doygunluk</system:String>
+    <system:String x:Key="Str_Smoothing">Yumuşatma</system:String>
+    <system:String x:Key="Str_TargetFps">Hedef FPS</system:String>
+
+    <!-- Effects -->
+    <system:String x:Key="Effect_Static_Name">Sabit</system:String>
+    <system:String x:Key="Effect_Static_Desc">Tek bir düz renk</system:String>
+    <system:String x:Key="Effect_Breathing_Name">Nefes Alma</system:String>
+    <system:String x:Key="Effect_Breathing_Desc">Yumuşak şekilde yanıp sönme</system:String>
+    <system:String x:Key="Effect_Pulse_Name">Atım</system:String>
+    <system:String x:Key="Effect_Pulse_Desc">Kısa ritmik parlamalar</system:String>
+    <system:String x:Key="Effect_Rainbow_Name">Gökkuşağı</system:String>
+    <system:String x:Key="Effect_Rainbow_Desc">Hareketli tam renk spektrumu</system:String>
+    <system:String x:Key="Effect_ColorWave_Name">Renk Dalgası</system:String>
+    <system:String x:Key="Effect_ColorWave_Desc">İki renk arasında dalgalı geçiş</system:String>
+    <system:String x:Key="Effect_GradientFlow_Name">Gradyan Akışı</system:String>
+    <system:String x:Key="Effect_GradientFlow_Desc">Sürekli akan pürüzsüz karışım</system:String>
+    <system:String x:Key="Effect_Aurora_Name">Aurora</system:String>
+    <system:String x:Key="Effect_Aurora_Desc">Organik kuzey ışıkları</system:String>
+    <system:String x:Key="Effect_Fire_Name">Ateş</system:String>
+    <system:String x:Key="Effect_Fire_Desc">Titreşen alevler</system:String>
+    <system:String x:Key="Effect_Cyber_Name">Siber</system:String>
+    <system:String x:Key="Effect_Cyber_Desc">Fütüristik yüksek kontrastlı dalgalar</system:String>
+</ResourceDictionary>

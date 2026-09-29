@@ -1,0 +1,139 @@
+﻿<UserControl x:Class="HexAmbientLight.Wpf.Views.LightingStudioView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:HexAmbientLight.Wpf.Controls"
+             xmlns:loc="clr-namespace:HexAmbientLight.Wpf.Localization"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="Transparent">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="{loc:Translate Key=Studio.Title}" FontSize="28" FontWeight="SemiBold" Foreground="{StaticResource ModernTextBrush}" />
+            <TextBlock Text="{loc:Translate Key=Studio.Subtitle}" FontSize="14" Foreground="{StaticResource ModernTextMutedBrush}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- MAIN LAYOUT -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- LEFT: Effects -->
+            <Border Grid.Column="0" Background="{StaticResource ModernSurfaceBrush}" CornerRadius="12" Padding="15">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{loc:Translate Key=Studio.Effects}" FontSize="18" FontWeight="Medium" Foreground="{StaticResource ModernTextBrush}" Margin="0,0,0,10"/>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding AvailableEffects}" SelectedItem="{Binding SelectedEffectId, Mode=TwoWay}"
+                             Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Padding" Value="10"/>
+                                <Setter Property="Margin" Value="0,0,0,8"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="{StaticResource ModernBgBrush}" BorderThickness="1">
+                                                <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#252530"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="#2A2A38"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource ModernAccentBrush}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding}" FontWeight="SemiBold" Foreground="{StaticResource ModernTextBrush}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- CENTER: Colors -->
+            <Border Grid.Column="2" Background="{StaticResource ModernSurfaceBrush}" CornerRadius="12" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Translate Key=Studio.Colors}" FontSize="18" FontWeight="Medium" Foreground="{StaticResource ModernTextBrush}" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Text="{loc:Translate Key=Studio.PrimaryColor}" Foreground="{StaticResource ModernTextMutedBrush}" Margin="0,0,0,4"/>
+                    <controls:HsvColorPicker SelectedColorHex="{Binding PrimaryColorHex, Mode=TwoWay}" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="{loc:Translate Key=Studio.SecondaryColor}" Foreground="{StaticResource ModernTextMutedBrush}" Margin="0,0,0,4"/>
+                    <controls:HsvColorPicker SelectedColorHex="{Binding SecondaryColorHex, Mode=TwoWay}" Margin="0,0,0,15"/>
+                    
+                    <TextBlock Text="{loc:Translate Key=Studio.AccentColor}" Foreground="{StaticResource ModernTextMutedBrush}" Margin="0,0,0,4"/>
+                    <controls:HsvColorPicker SelectedColorHex="{Binding TertiaryColorHex, Mode=TwoWay}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- RIGHT: Animation & Output -->
+            <StackPanel Grid.Column="4">
+                <Border Background="{StaticResource ModernSurfaceBrush}" CornerRadius="12" Padding="15" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="{loc:Translate Key=Studio.Animation}" FontSize="18" FontWeight="Medium" Foreground="{StaticResource ModernTextBrush}" Margin="0,0,0,15"/>
+                        
+                        <Grid Margin="0,0,0,4">
+                            <TextBlock Text="{loc:Translate Key=Studio.Speed}" Foreground="{StaticResource ModernTextMutedBrush}" HorizontalAlignment="Left"/>
+                        </Grid>
+                        <Slider Minimum="0" Maximum="1" Value="{Binding Speed}" TickFrequency="0.01" IsSnapToTickEnabled="True" Style="{StaticResource ModernSliderStyle}" Margin="0,0,0,15"/>
+
+                        <Grid Margin="0,0,0,4">
+                            <TextBlock Text="{loc:Translate Key=Studio.Intensity}" Foreground="{StaticResource ModernTextMutedBrush}" HorizontalAlignment="Left"/>
+                        </Grid>
+                        <Slider Minimum="0" Maximum="1" Value="{Binding Intensity}" TickFrequency="0.01" IsSnapToTickEnabled="True" Style="{StaticResource ModernSliderStyle}" Margin="0,0,0,15"/>
+
+                        <TextBlock Text="{loc:Translate Key=Studio.Direction}" Foreground="{StaticResource ModernTextMutedBrush}" Margin="0,0,0,4"/>
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Content="{loc:Translate Key=Studio.Forward}" IsChecked="{Binding Direction, Converter={StaticResource IntEqualityConverter}, ConverterParameter=1}" Style="{StaticResource ModernSegmentedButtonStyle}" Margin="0,0,10,0"/>
+                            <RadioButton Content="{loc:Translate Key=Studio.Reverse}" IsChecked="{Binding Direction, Converter={StaticResource IntEqualityConverter}, ConverterParameter=-1}" Style="{StaticResource ModernSegmentedButtonStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Quick Colors -->
+                <Border Background="{StaticResource ModernSurfaceBrush}" CornerRadius="12" Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="{loc:Translate Key=Studio.QuickColors}" FontSize="18" FontWeight="Medium" Foreground="{StaticResource ModernTextBrush}" Margin="0,0,0,15"/>
+                        <WrapPanel>
+                            <Button Command="{Binding SetQuickColorCommand}" CommandParameter="#FF00FFFF" Width="30" Height="30" Background="#FF00FFFF" Margin="0,0,10,10" Style="{StaticResource ColorSwatchStyle}"/>
+                            <Button Command="{Binding SetQuickColorCommand}" CommandParameter="#FF0000FF" Width="30" Height="30" Background="#FF0000FF" Margin="0,0,10,10" Style="{StaticResource ColorSwatchStyle}"/>
+                            <Button Command="{Binding SetQuickColorCommand}" CommandParameter="#FFFF00FF" Width="30" Height="30" Background="#FFFF00FF" Margin="0,0,10,10" Style="{StaticResource ColorSwatchStyle}"/>
+                            <Button Command="{Binding SetQuickColorCommand}" CommandParameter="#FFFF0000" Width="30" Height="30" Background="#FFFF0000" Margin="0,0,10,10" Style="{StaticResource ColorSwatchStyle}"/>
+                            <Button Command="{Binding SetQuickColorCommand}" CommandParameter="#FF00FF00" Width="30" Height="30" Background="#FF00FF00" Margin="0,0,10,10" Style="{StaticResource ColorSwatchStyle}"/>
+                            <Button Command="{Binding SetQuickColorCommand}" CommandParameter="#FFFFDD99" Width="30" Height="30" Background="#FFFFDD99" Margin="0,0,10,10" Style="{StaticResource ColorSwatchStyle}"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
+
+

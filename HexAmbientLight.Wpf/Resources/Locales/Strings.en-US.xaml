@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!-- General -->
+    <system:String x:Key="Str_AppTitle">Hex Ambient Light</system:String>
+    <system:String x:Key="Str_Connected">Connected</system:String>
+    <system:String x:Key="Str_Disconnected">Disconnected</system:String>
+    <system:String x:Key="Str_Inactive">Inactive</system:String>
+    <system:String x:Key="Str_Active">Active</system:String>
+    <system:String x:Key="Str_SaveSettings">Save Settings</system:String>
+    
+    <!-- Navigation -->
+    <system:String x:Key="Str_NavDashboard">Dashboard</system:String>
+    <system:String x:Key="Str_NavAmbilight">Ambilight</system:String>
+    <system:String x:Key="Str_NavLightingStudio">Lighting Studio</system:String>
+    <system:String x:Key="Str_NavGame">Game Integration</system:String>
+    <system:String x:Key="Str_NavDevice">Device (WLED)</system:String>
+    <system:String x:Key="Str_NavSettings">Settings</system:String>
+    <system:String x:Key="Str_NavDiagnostics">Diagnostics</system:String>
+
+    <!-- Lighting Studio -->
+    <system:String x:Key="Str_LightingStudio_Title">Lighting Studio</system:String>
+    <system:String x:Key="Str_LightingStudio_Desc">Create your own ambient lighting scene</system:String>
+    <system:String x:Key="Str_LightingStudio_Effects">Effects</system:String>
+    <system:String x:Key="Str_LightingStudio_Colors">Colors</system:String>
+    <system:String x:Key="Str_LightingStudio_PrimaryColor">Primary Color</system:String>
+    <system:String x:Key="Str_LightingStudio_SecondaryColor">Secondary Color</system:String>
+    <system:String x:Key="Str_LightingStudio_AccentColor">Accent Color</system:String>
+    <system:String x:Key="Str_LightingStudio_Speed">Speed</system:String>
+    <system:String x:Key="Str_LightingStudio_Intensity">Intensity</system:String>
+    <system:String x:Key="Str_LightingStudio_Direction">Direction</system:String>
+    <system:String x:Key="Str_LightingStudio_Forward">Forward</system:String>
+    <system:String x:Key="Str_LightingStudio_Reverse">Reverse</system:String>
+    <system:String x:Key="Str_LightingStudio_QuickColors">Quick Colors</system:String>
+    <system:String x:Key="Str_LightingStudio_LivePreview">Live Preview</system:String>
+
+    <!-- Post Processing -->
+    <system:String x:Key="Str_Brightness">Brightness</system:String>
+    <system:String x:Key="Str_Saturation">Saturation</system:String>
+    <system:String x:Key="Str_Smoothing">Smoothing</system:String>
+    <system:String x:Key="Str_TargetFps">Target FPS</system:String>
+
+    <!-- Effects -->
+    <system:String x:Key="Effect_Static_Name">Static</system:String>
+    <system:String x:Key="Effect_Static_Desc">Solid single color</system:String>
+    <system:String x:Key="Effect_Breathing_Name">Breathing</system:String>
+    <system:String x:Key="Effect_Breathing_Desc">Smooth fade in and out</system:String>
+    <system:String x:Key="Effect_Pulse_Name">Pulse</system:String>
+    <system:String x:Key="Effect_Pulse_Desc">Short rhythmic flashes</system:String>
+    <system:String x:Key="Effect_Rainbow_Name">Rainbow</system:String>
+    <system:String x:Key="Effect_Rainbow_Desc">Moving full color spectrum</system:String>
+    <system:String x:Key="Effect_ColorWave_Name">Color Wave</system:String>
+    <system:String x:Key="Effect_ColorWave_Desc">Wavy transition between two colors</system:String>
+    <system:String x:Key="Effect_GradientFlow_Name">Gradient Flow</system:String>
+    <system:String x:Key="Effect_GradientFlow_Desc">Smooth blend flowing continuously</system:String>
+    <system:String x:Key="Effect_Aurora_Name">Aurora</system:String>
+    <system:String x:Key="Effect_Aurora_Desc">Organic northern lights</system:String>
+    <system:String x:Key="Effect_Fire_Name">Fire</system:String>
+    <system:String x:Key="Effect_Fire_Desc">Flickering flames</system:String>
+    <system:String x:Key="Effect_Cyber_Name">Cyber</system:String>
+    <system:String x:Key="Effect_Cyber_Desc">Futuristic high contrast waves</system:String>
+</ResourceDictionary>

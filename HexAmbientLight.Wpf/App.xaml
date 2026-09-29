@@ -1,4 +1,4 @@
-<Application x:Class="HexAmbientLight.Wpf.App"
+﻿<Application x:Class="HexAmbientLight.Wpf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:HexAmbientLight.Wpf.Converters"
@@ -7,8 +7,12 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/Theme.xaml"/>
+                <ResourceDictionary Source="Styles/ModernStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <converters:TypeToBoolConverter x:Key="TypeToBoolConverter"/>
+            <converters:IntEqualityConverter x:Key="IntEqualityConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
+
+
