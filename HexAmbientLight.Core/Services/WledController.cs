@@ -35,33 +35,13 @@ public class WledController : IDisposable
     public async Task<bool> IsAliveAsync()
     {
         var ip = _settingsManager.AppSettings.WledIpAddress;
-        if (string.IsNullOrWhiteSpace(ip)) return false;
-
-        try
-        {
-            var response = await _httpClient.GetAsync($"http://{ip}/json/state");
-            IsConnected = response.IsSuccessStatusCode; return IsConnected;
-        }
-        catch
-        {
-            return false;
-        }
+        if (string.IsNullOrWhiteSpace(ip)) { IsConnected = false; return false; } try { var response = await _httpClient.GetAsync($"http://{ip}/json/state"); IsConnected = response.IsSuccessStatusCode; return IsConnected; } catch { IsConnected = false; return false; }
     }
 
     public async Task ConnectAndSaveStateAsync()
     {
         var ip = _settingsManager.AppSettings.WledIpAddress;
-        if (string.IsNullOrWhiteSpace(ip)) return;
-
-        try
-        {
-            _savedState = await _httpClient.GetFromJsonAsync<WledStateResponse>($"http://{ip}/json/state");
-            Log.Information("Saved current WLED state.");
-        }
-        catch (Exception ex)
-        {
-            Log.Warning(ex, "Failed to save WLED state. Device might be offline.");
-        }
+        if (string.IsNullOrWhiteSpace(ip)) { IsConnected = false; return; } try { _savedState = await _httpClient.GetFromJsonAsync<WledStateResponse>($"http://{ip}/json/state"); IsConnected = true; Log.Information("Saved current WLED state."); } catch (Exception ex) { IsConnected = false; Log.Warning(ex, "Failed to save WLED state. Device might be offline."); }
     }
 
     public async Task SendDdpFrameAsync(ReadOnlyMemory<byte> rgbData)

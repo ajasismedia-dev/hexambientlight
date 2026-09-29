@@ -85,7 +85,7 @@ public class Cs2GsiListener : IDisposable
                 // Debug log phase_countdowns specifically
                 if (json.Contains("phase_countdowns"))
                 {
-                    try { File.AppendAllText("gsi_phase_countdowns.txt", json + Environment.NewLine); } catch { }
+                    
                 }
 
                 var state = JsonSerializer.Deserialize<Cs2GameState>(json);

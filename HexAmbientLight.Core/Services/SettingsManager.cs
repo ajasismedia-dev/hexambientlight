@@ -19,10 +19,17 @@ public class SettingsManager
     public AppSettings AppSettings { get; set; } = new();
     public LedLayoutConfig LayoutConfig { get; set; } = new();
 
-    public SettingsManager()
+        public SettingsManager(string? baseDirectory = null)
     {
-        var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        _settingsDirectory = Path.Combine(appData, "HexAmbientLight");
+        if (baseDirectory != null)
+        {
+            _settingsDirectory = baseDirectory;
+        }
+        else
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            _settingsDirectory = Path.Combine(appData, "HexAmbientLight");
+        }
         _settingsFilePath = Path.Combine(_settingsDirectory, "appsettings.json");
         _layoutFilePath = Path.Combine(_settingsDirectory, "ledlayout.json");
     }

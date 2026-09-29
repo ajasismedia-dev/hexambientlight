@@ -251,13 +251,11 @@ public class ModeOrchestrator : IDisposable
 
         if (rgbData.Length > 0)
         {
-            Log.Debug("Sending DDP frame with {Length} bytes in {Mode} mode", rgbData.Length, _effectiveMode);
             await _wledController.SendDdpFrameAsync(rgbData);
         }
         else
         {
-            Log.Debug("No RGB data generated in {Mode} mode", _effectiveMode);
-        }
+            }
     }
 
     public void Stop()

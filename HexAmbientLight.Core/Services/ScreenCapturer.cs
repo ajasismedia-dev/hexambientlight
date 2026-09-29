@@ -184,24 +184,28 @@ public class ScreenCapturer : IDisposable
         
         var mapped = _d3dContext.Map(_stagingTexture, 0, MapMode.Read, Vortice.Direct3D11.MapFlags.None);
         
-        int bufferSize = _width * _height * 4;
-        if (_latestRgbaData.Length != bufferSize)
+                int bufferSize = _width * _height * 4;
+        
+        lock (_frameLock)
         {
-            _latestRgbaData = new byte[bufferSize];
-        }
-
-        unsafe
-        {
-            byte* sourcePtr = (byte*)mapped.DataPointer;
-            fixed (byte* destPtr = _latestRgbaData)
+            if (_latestRgbaData.Length != bufferSize)
             {
-                for (int y = 0; y < _height; y++)
+                _latestRgbaData = new byte[bufferSize];
+            }
+
+            unsafe
+            {
+                byte* sourcePtr = (byte*)mapped.DataPointer;
+                fixed (byte* destPtr = _latestRgbaData)
                 {
-                    Buffer.MemoryCopy(
-                        sourcePtr + (y * mapped.RowPitch), 
-                        destPtr + (y * _width * 4), 
-                        _width * 4, 
-                        _width * 4);
+                    for (int y = 0; y < _height; y++)
+                    {
+                        Buffer.MemoryCopy(
+                            sourcePtr + (y * mapped.RowPitch), 
+                            destPtr + (y * _width * 4), 
+                            _width * 4, 
+                            _width * 4);
+                    }
                 }
             }
         }
@@ -224,8 +228,10 @@ public class ScreenCapturer : IDisposable
         }
     }
 
-    public byte[] GetLatestFrameData()
+        public byte[] GetLatestFrameData()
     {
+        // TODO: GetLatestFrameData() her call'da full frame copy yapiyor.
+        // Bu sonraki performans turunda optimize edilecek.
         lock (_frameLock)
         {
             var copy = new byte[_latestRgbaData.Length];

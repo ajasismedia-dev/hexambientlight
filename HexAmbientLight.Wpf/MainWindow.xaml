@@ -42,7 +42,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar -->
-        <Border Grid.Column="0" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="{DynamicResource Surface1Brush}" BorderBrush="{DynamicResource SurfaceBorderBrush}" BorderThickness="0,0,1,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -52,7 +52,7 @@
 
                 <!-- Logo/Brand -->
                 <StackPanel Grid.Row="0" Margin="20,24,20,32" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Path Data="M 10,0 L 20,5 L 20,15 L 10,20 L 0,15 L 0,5 Z" Fill="{DynamicResource AccentBrush}" Width="20" Height="20" Stretch="Fill"/>
+                    <Path Data="M 10,0 L 20,5 L 20,15 L 10,20 L 0,15 L 0,5 Z" Fill="{DynamicResource AccentCyanBrush}" Width="20" Height="20" Stretch="Fill"/>
                     <TextBlock Text="HexAmbientLight" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="16" FontWeight="SemiBold" Margin="12,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
 
@@ -64,7 +64,7 @@
                         <RadioButton Content="CS2 Game Sync" Command="{Binding NavigateCommand}" CommandParameter="Game" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:GameViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}" Margin="0,4,0,0"/>
                         <RadioButton Content="Manual Color" Command="{Binding NavigateCommand}" CommandParameter="Manual" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:ManualViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}" Margin="0,4,0,0"/>
                         
-                        <Separator Margin="0,16" Background="{DynamicResource BorderBrush}"/>
+                        <Separator Margin="0,16" Background="{DynamicResource SurfaceBorderBrush}"/>
                         
                         <RadioButton Content="WLED Devices" Command="{Binding NavigateCommand}" CommandParameter="Device" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:DeviceViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}"/>
                         <RadioButton Content="Settings" Command="{Binding NavigateCommand}" CommandParameter="Settings" IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource TypeToBoolConverter}, ConverterParameter={x:Type viewModels:SettingsViewModel}}" Style="{DynamicResource NavMenuRadioButtonStyle}" Margin="0,4,0,0"/>

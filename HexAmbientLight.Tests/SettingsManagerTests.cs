@@ -8,17 +8,24 @@ namespace HexAmbientLight.Tests;
 
 public class SettingsManagerTests
 {
-    [Fact]
+        [Fact]
     public async Task InitializeAsync_CreatesDefaultSettings_IfNotExist()
     {
-        // SettingsManager uses LocalAppData, so this test will actually write to %localappdata%/HexAmbientLight
-        // In a real test project we might want to abstract the file system or path, but for MVP verification this is ok.
-        var settingsManager = new SettingsManager();
-        await settingsManager.InitializeAsync();
-        
-        Assert.NotNull(settingsManager.AppSettings);
-        Assert.NotNull(settingsManager.LayoutConfig);
-        Assert.True(settingsManager.AppSettings.ConfigSchemaVersion == 1);
-        Assert.True(settingsManager.LayoutConfig.TotalLeds == 54); // Default
+        var tempDir = Path.Combine(Path.GetTempPath(), "HexAmbientLight.Tests", Guid.NewGuid().ToString());
+        try
+        {
+            var settingsManager = new SettingsManager(tempDir);
+            await settingsManager.InitializeAsync();
+            
+            Assert.NotNull(settingsManager.AppSettings);
+            Assert.NotNull(settingsManager.LayoutConfig);
+            Assert.True(settingsManager.AppSettings.ConfigSchemaVersion == 1);
+            Assert.True(settingsManager.LayoutConfig.TotalLeds == 54);
+            Assert.Equal("192.168.1.2", settingsManager.AppSettings.WledIpAddress);
+        }
+        finally
+        {
+            if (Directory.Exists(tempDir)) Directory.Delete(tempDir, true);
+        }
     }
 }

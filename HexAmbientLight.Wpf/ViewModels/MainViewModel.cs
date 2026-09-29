@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HexAmbientLight.Wpf.ViewModels;
@@ -36,6 +37,21 @@ public partial class MainViewModel : ViewModelBase
             foreach (var navItem in NavigationItems)
             {
                 navItem.IsSelected = (navItem == value);
+            }
+        }
+    }
+    [RelayCommand]
+    private void Navigate(string targetName)
+    {
+        foreach (var item in NavigationItems)
+        {
+            if (item.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase) || 
+               (item.Name == "CS2 Game Sync" && targetName == "Game") ||
+               (item.Name == "Manual Color" && targetName == "Manual") ||
+               (item.Name == "WLED Devices" && targetName == "Device"))
+            {
+                SelectedNavigationItem = item;
+                break;
             }
         }
     }

@@ -23,6 +23,12 @@ public partial class GameViewModel : ViewModelBase
     [ObservableProperty]
     private int _armor = 0;
 
+    [ObservableProperty]
+    private bool _isSpectating = false;
+
+    [ObservableProperty]
+    private bool _localPlayerDataValid = false;
+
     public GameViewModel(Cs2GsiListener gsiListener)
     {
         _gsiListener = gsiListener;
@@ -40,14 +46,28 @@ public partial class GameViewModel : ViewModelBase
         if (hasCs2 && state != null)
         {
             BombState = state.Round?.Bomb != null ? state.Round.Bomb : "Inactive";
-            Health = state.Player?.State?.Health ?? 0;
-            Armor = state.Player?.State?.Armor ?? 0;
+            
+            LocalPlayerDataValid = state.IsLocalPlayerDataValid;
+            IsSpectating = !state.IsLocalPlayerDataValid && state.Player != null;
+
+            if (state.IsLocalPlayerDataValid)
+            {
+                Health = state.Player?.State?.Health ?? 0;
+                Armor = state.Player?.State?.Armor ?? 0;
+            }
+            else
+            {
+                Health = 0;
+                Armor = 0;
+            }
         }
         else
         {
             BombState = "Inactive";
             Health = 0;
             Armor = 0;
+            LocalPlayerDataValid = false;
+            IsSpectating = false;
         }
     }
 }
